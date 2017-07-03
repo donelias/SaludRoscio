@@ -1,0 +1,52 @@
+<?php
+
+namespace App;
+
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'email', 'password','user', 'role_id'
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    protected $dates = [
+        'last_login',
+    ];
+
+    public function role()
+     {
+            return $this->belongsTo('App\Role');
+     }
+
+     /**
+      * Scope para busqueda de usuarios
+      */
+     
+    public function scopeBuscar($query, $search)
+    {
+        return $query->where('name', 'LIKE', "%$search%");
+    }
+
+    public function order()
+    {
+        return $this->hsMany('App\Order');
+    }
+}
